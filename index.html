@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitMotivator Pro | Voice Fitness Trainer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #ff6d00;
+            --success: #00c853;
+            --danger: #ff1744;
+            --reset: #9c27b0;
+            --dark: #121212;
+            --light: #f5f7fa;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-light: #ffffff;
+            --running: #1a73e8;
+            --cycling: #00c853;
+            --hiit: #ff1744;
+            --yoga: #9c27b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .pulse-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--secondary), transparent);
+            animation: pulse 3s infinite ease-out;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .tagline {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .dashboard {
+            display: grid;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-title {
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            margin-bottom: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-title i {
+            color: var(--secondary);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-light);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-start {
+            background: var(--success);
+            grid-column: span 2;
+        }
+
+        .btn-stop {
+            background: var(--danger);
+            grid-column: span 2;
+        }
+
+        .btn-reset {
+            background: var(--reset);
+            grid-column: span 2;
+        }
+
+        .timer-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .timer-display {
+            font-size: clamp(4rem, 15vw, 6rem);
+            font-weight: 900;
+            margin: 20px 0;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .progress-container {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 20px auto;
+            max-width: 500px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 1s linear;
+        }
+
+        .workout-type {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .workout-btn {
+            min-width: 120px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            color: var(--text-light);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .workout-btn.active {
+            background: var(--running);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .workout-btn.cycling.active {
+            background: var(--cycling);
+        }
+
+        .workout-btn.hiit.active {
+            background: var(--hiit);
+        }
+
+        .workout-btn.yoga.active {
+            background: var(--yoga);
+        }
+
+        .workout-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .workout-btn i {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .music-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .music-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary-dark);
+        }
+
+        .music-info {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            z-index: 100;
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 0.3; }
+            100% { transform: scale(0.8); opacity: 0.7; }
+        }
+
+        @keyframes countdownPulse {
+            0% { transform: scale(1); text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+            50% { transform: scale(1.2); text-shadow: 0 0 20px var(--danger); }
+            100% { transform: scale(1); text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+        }
+
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+
+        .countdown-display {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10rem;
+            font-weight: 900;
+            color: var(--secondary);
+            text-shadow: 0 0 30px rgba(255, 109, 0, 0.8);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            animation: countdownPulse 0.5s ease-out;
+        }
+
+        .voice-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 50px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--danger);
+        }
+
+        .status-dot.active {
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+        }
+
+        .voice-test {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            text-align: center;
+            opacity: 0.8;
+            cursor: pointer;
+            padding: 10px 15px;
+            background: var(--primary);
+            border-radius: 25px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .voice-test:hover {
+            opacity: 1;
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        /* Mobile specific styles */
+        @media (max-width: 768px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                grid-column: span 1;
+                padding: 16px 12px;
+            }
+            
+            .workout-btn {
+                min-width: calc(50% - 10px);
+            }
+
+            .music-controls {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .music-info {
+                bottom: 70px;
+                right: 10px;
+                max-width: 200px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .workout-type {
+                flex-direction: column;
+            }
+            
+            .workout-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation" id="background-animation"></div>
+    <div class="countdown-display" id="countdown-display"></div>
+    <div class="music-info" id="music-info">Now Playing: EDM Workout Mix</div>
+    
+    <div class="container">
+        <header>
+            <h1>FitMotivator Pro</h1>
+            <p class="tagline">Your personal fitness coach with energetic female voice motivation</p>
+        </header>
+        
+        <div class="dashboard">
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-cogs"></i> Workout Settings</h2>
+                
+                <div class="voice-status">
+                    <div class="status-dot active" id="voice-status"></div>
+                    <span id="voice-status-text">Voice: Ready</span>
+                </div>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="duration">Workout Duration (minutes)</label>
+                        <input type="range" id="duration" min="5" max="60" value="20" step="5">
+                        <div id="duration-value">20 minutes</div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="intensity">Workout Intensity</label>
+                        <select id="intensity">
+                            <option value="slow">Slow & Steady</option>
+                            <option value="moderate">Moderate Training</option>
+                            <option value="intense" selected>Intense Training</option>
+                            <option value="endurance">Endurance Training</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Workout Activity</label>
+                        <div class="workout-type">
+                            <div class="workout-btn active running" data-type="running">
+                                <i class="fas fa-running"></i>
+                                <span>Running</span>
+                            </div>
+                            <div class="workout-btn cycling" data-type="cycling">
+                                <i class="fas fa-biking"></i>
+                                <span>Cycling</span>
+                            </div>
+                            <div class="workout-btn hiit" data-type="hiit">
+                                <i class="fas fa-fire"></i>
+                                <span>HIIT</span>
+                            </div>
+                            <div class="workout-btn yoga" data-type="yoga">
+                                <i class="fas fa-spa"></i>
+                                <span>Yoga</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group" style="grid-column: span 2; text-align: center;">
+                        <div class="voice-test" id="voice-test">
+                            <i class="fas fa-volume-up"></i> Test Coach Voice
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-start" id="start-btn">Start Workout</button>
+                    <button class="btn btn-stop" id="stop-btn" disabled>Stop Workout</button>
+                    <button class="btn btn-reset" id="reset-btn">Reset Workout</button>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-running"></i> Workout Session</h2>
+                <div class="timer-container">
+                    <div class="timer-display" id="timer">20:00</div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>FitMotivator Pro - Voice Fitness Trainer | Designed for Athletes</p>
+        </div>
+    </div>
+
+    <div class="music-controls">
+        <div class="music-btn" id="music-toggle">
+            <i class="fas fa-music"></i>
+        </div>
+        <div class="music-btn" id="volume-down">
+            <i class="fas fa-volume-down"></i>
+        </div>
+        <div class="music-btn" id="volume-up">
+            <i class="fas fa-volume-up"></i>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const durationSlider = document.getElementById('duration');
+        const durationValue = document.getElementById('duration-value');
+        const intensitySelect = document.getElementById('intensity');
+        const timerDisplay = document.getElementById('timer');
+        const progressBar = document.getElementById('progress-bar');
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const voiceTest = document.getElementById('voice-test');
+        const workoutButtons = document.querySelectorAll('.workout-btn');
+        const musicToggle = document.getElementById('music-toggle');
+        const volumeDown = document.getElementById('volume-down');
+        const volumeUp = document.getElementById('volume-up');
+        const countdownDisplay = document.getElementById('countdown-display');
+        const backgroundAnimation = document.getElementById('background-animation');
+        const musicInfo = document.getElementById('music-info');
+        const voiceStatus = document.getElementById('voice-status');
+        const voiceStatusText = document.getElementById('voice-status-text');
+
+        // Workout variables
+        let workoutDuration = 20 * 60; // in seconds
+        let timeLeft = workoutDuration;
+        let timerInterval;
+        let isWorkoutActive = false;
+        let motivationLevel = 'intense'; // Default intensity
+        let currentActivity = 'running';
+        let storyInterval;
+        let storyIndex = 0;
+        let musicVolume = 0.5;
+        let isMusicPlaying = false;
+        let currentStorylineSet = 0;
+        let audioContext;
+        let audioSource;
+        let audioElement;
+        let currentMusicTrack = 0;
+
+        // Live music streams
+        const musicTracks = [
+            {name: "EDM Workout Mix", url: "https://stream.zeno.fm/0r0xa792kwzuv"},
+            {name: "Pump Up Beats", url: "https://stream.zeno.fm/f3wvbbqmdl8uv"},
+            {name: "Energy Radio", url: "https://stream.zeno.fm/7yyd8p40n0zuv"}
+        ];
+
+        // Create background animation
+        function createBackgroundAnimation() {
+            for (let i = 0; i < 15; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('pulse-circle');
+                
+                // Random position and size
+                const size = Math.random() * 200 + 50;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                circle.style.left = `${posX}%`;
+                circle.style.top = `${posY}%`;
+                circle.style.animationDelay = `${delay}s`;
+                
+                backgroundAnimation.appendChild(circle);
+            }
+        }
+
+        // Initialize audio
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                loadMusicTrack();
+            } catch (e) {
+                console.log("Web Audio API not supported:", e);
+                musicInfo.textContent = "Music: Not Supported";
+            }
+        }
+
+        // Load music track
+        function loadMusicTrack() {
+            if (!audioContext) return;
+            
+            // Cycle through tracks
+            currentMusicTrack = (currentMusicTrack + 1) % musicTracks.length;
+            const track = musicTracks[currentMusicTrack];
+            
+            // Update music info
+            musicInfo.textContent = `Now Playing: ${track.name}`;
+            
+            // Create new audio element
+            if (audioElement) {
+                audioElement.pause();
+            }
+            
+            audioElement = new Audio(track.url);
+            audioElement.crossOrigin = "anonymous";
+            audioElement.loop = true;
+            audioElement.volume = musicVolume;
+            
+            // Create audio source
+            if (audioSource) {
+                audioSource.disconnect();
+            }
+            
+            audioSource = audioContext.createMediaElementSource(audioElement);
+            audioSource.connect(audioContext.destination);
+        }
+
+        // Check for speech synthesis support
+        function checkSpeechSupport() {
+            if ('speechSynthesis' in window) {
+                voiceStatus.classList.add('active');
+                voiceStatusText.textContent = 'Voice: Ready';
+                return true;
+            }
+            voiceStatusText.textContent = 'Voice: Not Supported';
+            return false;
+        }
+
+        // Speak text with energetic female voice
+        function speak(text) {
+            if (!checkSpeechSupport()) return;
+            
+            // Reduce music volume during speech
+            if (audioElement) {
+                audioElement.volume = Math.max(0.1, musicVolume * 0.3);
+            }
+            
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.15; // Slightly faster for energy
+            utterance.pitch = 1.2; // Higher pitch for female voice
+            utterance.volume = 1.0;
+            
+            // Set female voice
+            const voices = window.speechSynthesis.getVoices();
+            let femaleVoice = null;
+            
+            // Try to find a female voice
+            const femaleVoiceNames = [
+                'Samantha', 'Karen', 'Fiona', 'Tessa', 'Veena',
+                'Google UK English Female', 'Microsoft Zira Desktop',
+                'Flo', 'Cathy', 'Kate'
+            ];
+            
+            for (let name of femaleVoiceNames) {
+                femaleVoice = voices.find(voice => voice.name.includes(name));
+                if (femaleVoice) break;
+            }
+            
+            // Fallback to first available voice
+            if (!femaleVoice && voices.length > 0) {
+                femaleVoice = voices[0];
+            }
+            
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            }
+            
+            utterance.onend = function() {
+                // Restore original music volume
+                if (audioElement) {
+                    audioElement.volume = musicVolume;
+                }
+            };
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Show countdown animation
+        function showCountdown(seconds) {
+            countdownDisplay.textContent = seconds;
+            countdownDisplay.style.opacity = '1';
+            
+            setTimeout(() => {
+                countdownDisplay.style.opacity = '0';
+            }, 1000);
+        }
+
+        // Update duration display
+        durationSlider.addEventListener('input', function() {
+            const minutes = this.value;
+            durationValue.textContent = `${minutes} minutes`;
+            workoutDuration = minutes * 60;
+            if (!isWorkoutActive) {
+                timeLeft = workoutDuration;
+                updateTimerDisplay();
+            }
+        });
+
+        // Update intensity
+        intensitySelect.addEventListener('change', function() {
+            motivationLevel = this.value;
+        });
+
+        // Test voice
+        voiceTest.addEventListener('click', function() {
+            speak("This is your energetic female fitness coach! Let's crush this workout!");
+        });
+
+        // Set workout activity
+        workoutButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                workoutButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Set current activity
+                currentActivity = this.getAttribute('data-type');
+            });
+        });
+
+        // Toggle music
+        musicToggle.addEventListener('click', function() {
+            if (isMusicPlaying) {
+                if (audioElement) audioElement.pause();
+                isMusicPlaying = false;
+                this.innerHTML = '<i class="fas fa-music"></i>';
+            } else {
+                if (audioElement) {
+                    audioElement.play().catch(e => {
+                        console.log("Audio play prevented:", e);
+                    });
+                }
+                isMusicPlaying = true;
+                this.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+        });
+
+        // Adjust volume
+        volumeDown.addEventListener('click', function() {
+            musicVolume = Math.max(0, musicVolume - 0.1);
+            if (audioElement) audioElement.volume = musicVolume;
+        });
+
+        volumeUp.addEventListener('click', function() {
+            musicVolume = Math.min(1, musicVolume + 0.1);
+            if (audioElement) audioElement.volume = musicVolume;
+        });
+
+        // Start workout
+        startBtn.addEventListener('click', startWorkout);
+
+        // Stop workout
+        stopBtn.addEventListener('click', stopWorkout);
+
+        // Reset workout
+        resetBtn.addEventListener('click', resetWorkout);
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update progress bar
+            const progress = ((workoutDuration - timeLeft) / workoutDuration) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Start workout function
+        function startWorkout() {
+            if (isWorkoutActive) return;
+            
+            isWorkoutActive = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            resetBtn.disabled = false;
+            
+            // Reset time if needed
+            workoutDuration = parseInt(durationSlider.value) * 60;
+            timeLeft = workoutDuration;
+            updateTimerDisplay();
+            
+            // Start background music
+            if (audioElement) {
+                audioElement.play().catch(e => {
+                    console.log("Audio play prevented:", e);
+                });
+                audioElement.volume = musicVolume;
+                isMusicPlaying = true;
+                musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            
+            // Add motivation message
+            speak("Let's get started! Focus on your form and breathing! YOU'VE GOT THIS!");
+            
+            // Start timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                // Check for time-based motivation
+                if (timeLeft > 0) {
+                    checkForTimeBasedMotivation();
+                } else {
+                    stopWorkout();
+                    speak("AMAZING JOB! You absolutely CRUSHED your workout! Take a moment to appreciate your effort!");
+                }
+            }, 1000);
+        }
+
+        // Stop workout function
+        function stopWorkout() {
+            clearInterval(timerInterval);
+            clearInterval(storyInterval);
+            isWorkoutActive = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            
+            // Pause background music
+            if (audioElement) {
+                audioElement.pause();
+            }
+            isMusicPlaying = false;
+            musicToggle.innerHTML = '<i class="fas fa-music"></i>';
+            
+            // Cancel any ongoing speech
+            if (checkSpeechSupport()) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        // Reset workout function
+        function resetWorkout() {
+            stopWorkout();
+            
+            // Reset timer
+            workoutDuration = parseInt(durationSlider.value) * 60;
+            timeLeft = workoutDuration;
+            updateTimerDisplay();
+            
+            // Reset progress bar
+            progressBar.style.width = '0%';
+            
+            // Load new music track
+            loadMusicTrack();
+        }
+
+        // Check for time-based motivation
+        function checkForTimeBasedMotivation() {
+            const percentComplete = ((workoutDuration - timeLeft) / workoutDuration) * 100;
+            const minutesLeft = Math.floor(timeLeft / 60);
+            const secondsLeft = timeLeft % 60;
+            
+            // Trigger messages at specific intervals
+            if (percentComplete > 24 && percentComplete < 26) {
+                speak("First quarter DONE! You're finding your rhythm! LET'S PICK UP THE PACE!");
+            } else if (percentComplete > 49 && percentComplete < 51) {
+                speak(`HALFWAY THERE! ${minutesLeft} minutes to go! You're doing FANTASTIC! KEEP IT UP!`);
+            } else if (percentComplete > 74 && percentComplete < 76) {
+                speak("FINAL QUARTER! Time to PUSH YOUR LIMITS! DIG DEEP AND GIVE IT ALL! THIS IS WHERE CHAMPIONS ARE MADE!");
+            } else if (percentComplete > 89 && percentComplete < 91) {
+                speak("ALMOST THERE! FINISH STRONG! YOU'RE DOING AMAZING! ONE LAST PUSH!");
+            } else if (timeLeft === 60) {
+                speak("ONE MINUTE LEFT! GIVE IT EVERYTHING YOU'VE GOT! THIS IS YOUR MOMENT! LEAVE IT ALL ON THE FIELD!");
+            } else if (timeLeft === 30) {
+                speak("30 SECONDS REMAINING! PUSH THROUGH! ALMOST THERE! DON'T STOP NOW!");
+            } else if (timeLeft <= 10 && timeLeft > 0) {
+                // Countdown from 10
+                showCountdown(timeLeft);
+                if (timeLeft === 10) {
+                    speak("FINAL 10 SECONDS! COUNT IT DOWN WITH ME! FINISH STRONG!");
+                }
+            }
+        }
+
+        // Initialize
+        function init() {
+            updateTimerDisplay();
+            resetBtn.disabled = true;
+            checkSpeechSupport();
+            createBackgroundAnimation();
+            initAudio();
+            
+            // Enable audio on user interaction
+            document.body.addEventListener('click', function() {
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                // Test voice on first interaction
+                if (!window.voiceTestDone) {
+                    speak("Welcome to FitMotivator Pro! Let's crush your fitness goals together!");
+                    window.voiceTestDone = true;
+                }
+            });
+        }
+
+        // Run initialization
+        init();
+    </script>
+</body>
+</html>
